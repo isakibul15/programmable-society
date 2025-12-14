@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Challenge 6: Transaction Analysis Program
-Analyzes Sepolia transactions to verify internal calls to the registry contract
-"""
-
 import sys
 import requests
 from web3 import Web3
