@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 05 - Frontend</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .network-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .network-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .network-info strong {
+            color: #333;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .result-box {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .result-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .address-item {
+            background: #f0f4ff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .address-item:hover {
+            background: #e5edff;
+            transform: translateX(5px);
+        }
+
+        .address-item p {
+            margin: 5px 0;
+            word-break: break-all;
+            color: #555;
+        }
+
+        .address-item strong {
+            color: #333;
+        }
+
+        .data-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .data-field {
+            background: white;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .data-field label {
+            font-weight: 600;
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .data-field .value {
+            color: #333;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            font-size: 0.95em;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .error {
+            background: #fee;
+            border: 2px solid #fcc;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .success {
+            background: #efe;
+            border: 2px solid #cfc;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .wallet-status {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .wallet-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wallet-modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .wallet-modal h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .wallet-option {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .wallet-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .wallet-icon {
+            font-size: 40px;
+        }
+
+        .wallet-info h3 {
+            margin: 0;
+            color: #333;
+            font-size: 1.3em;
+        }
+
+        .wallet-info p {
+            margin: 5px 0 0 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .close-modal {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .close-modal:hover {
+            background: #c82333;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 Challenge 05</h1>
+        <p class="subtitle">Blockchain Data Viewer - Sepolia Testnet</p>
+
+        <div class="network-info">
+            <p><strong>Registry Contract:</strong> 0x3819C7071f2bc39C83187Bf5B5aeA79Fa3e37C42</p>
+            <p><strong>Network:</strong> Sepolia Testnet (Chain ID: 11155111)</p>
+            <p><strong>Status:</strong> <span id="connection-status">Not Connected</span></p>
+        </div>
+
+        <div id="wallet-warning" class="wallet-status" style="display: none;">
+            ⚠️ Please connect your wallet to Sepolia Testnet
+        </div>
+
+        <!-- Wallet Selection Modal -->
+        <div id="wallet-modal" class="wallet-modal">
+            <div class="wallet-modal-content">
+                <h2>🔗 Choose Your Wallet</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 20px;">
+                    Select which wallet you want to connect
+                </p>
+                
+                <div id="brave-wallet-option" class="wallet-option" onclick="selectWallet('brave')" style="display: none;">
+                    <div class="wallet-icon">🦁</div>
+                    <div class="wallet-info">
+                        <h3>Brave Wallet</h3>
+                        <p>Built-in Brave browser wallet</p>
+                    </div>
+                </div>
+
+                <div id="metamask-wallet-option" class="wallet-option" onclick="selectWallet('metamask')" style="display: none;">
+                    <div class="wallet-icon">🦊</div>
+                    <div class="wallet-info">
+                        <h3>MetaMask</h3>
+                        <p>Popular Ethereum wallet</p>
+                    </div>
+                </div>
+
+                <div id="no-wallet-message" style="text-align: center; padding: 20px; color: #dc3545;">
+                    No wallets detected. Please install Brave Wallet or MetaMask.
+                </div>
+
+                <button class="close-modal" onclick="closeWalletModal()">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Section 1: Get All Registered Addresses -->
+        <div class="section">
+            <h2>📋 Registered Addresses</h2>
+            <p style="margin-bottom: 20px; color: #666;">View all addresses that have registered their challenge data</p>
+            
+            <div class="button-group">
+                <button onclick="connectWallet()" id="btn-connect">Connect Wallet</button>
+                <button onclick="disconnectWallet()" id="btn-disconnect" style="display: none;">Disconnect Wallet</button>
+                <button onclick="getRegisteredAddresses()" id="btn-addresses">Get All Addresses</button>
+            </div>
+
+            <div id="addresses-result"></div>
+        </div>
+
+        <!-- Section 2: Get Data for Specific Address -->
+        <div class="section">
+            <h2>🔍 Query Address Data</h2>
+            <p style="margin-bottom: 20px; color: #666;">Enter an address to view its registered challenge data</p>
+            
+            <input 
+                type="text" 
+                id="address-input" 
+                placeholder="Enter Ethereum address (0x...)"
+                value="0x"
+            >
+            
+            <button onclick="getDataForAddress()">Get Data</button>
+
+            <div id="data-result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Contract configuration
+        const REGISTRY_ADDRESS = "0x3819C7071f2bc39C83187Bf5B5aeA79Fa3e37C42";
+        const SEPOLIA_CHAIN_ID = "0xaa36a7"; // 11155111 in hex
+
+        // Contract ABI - only the read methods we need
+        const REGISTRY_ABI = [
+            "function getRegisteredAddresses() public view returns (address[])",
+            "function getData(address user) public view returns (tuple(bytes32 tx_challenge01, bytes32 tx_challenge02, address contract_challenge03, address contract_challenge04))"
+        ];
+
+        let provider;
+        let contract;
+        let selectedProvider = null;
+
+        // Show wallet selection modal
+        function showWalletModal() {
+            const modal = document.getElementById('wallet-modal');
+            const braveOption = document.getElementById('brave-wallet-option');
+            const metamaskOption = document.getElementById('metamask-wallet-option');
+            const noWalletMsg = document.getElementById('no-wallet-message');
+            
+            let walletsFound = false;
+            
+            console.log('=== WALLET DETECTION DEBUG ===');
+            console.log('window.ethereum exists:', !!window.ethereum);
+            console.log('window.ethereum.isBraveWallet:', window.ethereum?.isBraveWallet);
+            console.log('window.ethereum.isMetaMask:', window.ethereum?.isMetaMask);
+            console.log('window.ethereum.providers:', window.ethereum?.providers);
+
+            // Reset display
+            braveOption.style.display = 'none';
+            metamaskOption.style.display = 'none';
+
+            if (!window.ethereum) {
+                noWalletMsg.style.display = 'block';
+                modal.style.display = 'flex';
+                return;
+            }
+
+            // Check for multiple providers (injected by different wallets)
+            if (window.ethereum.providers && Array.isArray(window.ethereum.providers)) {
+                console.log('Multiple providers detected:', window.ethereum.providers.length);
+                
+                window.ethereum.providers.forEach((provider, index) => {
+                    console.log(`Provider ${index}:`, {
+                        isBrave: provider.isBraveWallet,
+                        isMetaMask: provider.isMetaMask,
+                        isCoinbase: provider.isCoinbaseWallet
+                    });
+                    
+                    if (provider.isBraveWallet) {
+                        braveOption.style.display = 'flex';
+                        walletsFound = true;
+                    }
+                    if (provider.isMetaMask && !provider.isBraveWallet) {
+                        metamaskOption.style.display = 'flex';
+                        walletsFound = true;
+                    }
+                });
+            } else {
+                // Single provider
+                console.log('Single provider detected');
+                
+                // Brave Wallet sets isBraveWallet to true
+                if (window.ethereum.isBraveWallet) {
+                    console.log('✅ Brave Wallet detected (single)');
+                    braveOption.style.display = 'flex';
+                    walletsFound = true;
+                }
+                
+                // MetaMask sets isMetaMask to true (but Brave also does this, so check isBraveWallet first)
+                if (window.ethereum.isMetaMask && !window.ethereum.isBraveWallet) {
+                    console.log('✅ MetaMask detected (single)');
+                    metamaskOption.style.display = 'flex';
+                    walletsFound = true;
+                }
+                
+                // If only MetaMask flag is set, show both options (user might have Brave but it's not detected properly)
+                if (window.ethereum.isMetaMask && !window.ethereum.isBraveWallet) {
+                    console.log('⚠️ Only MetaMask flag detected - showing MetaMask option');
+                    metamaskOption.style.display = 'flex';
+                    walletsFound = true;
+                }
+            }
+
+            // Fallback: If we detect ethereum but no specific wallet, show a generic option
+            if (!walletsFound && window.ethereum) {
+                console.log('⚠️ Generic ethereum provider detected, showing as MetaMask option');
+                metamaskOption.style.display = 'flex';
+                walletsFound = true;
+            }
+
+            if (walletsFound) {
+                noWalletMsg.style.display = 'none';
+            } else {
+                console.log('❌ No wallets found');
+                noWalletMsg.style.display = 'block';
+                braveOption.style.display = 'none';
+                metamaskOption.style.display = 'none';
+            }
+
+            console.log('=== END DEBUG ===');
+            modal.style.display = 'flex';
+        }
+
+        // Close wallet modal
+        function closeWalletModal() {
+            document.getElementById('wallet-modal').style.display = 'none';
+        }
+
+        // Select wallet and connect
+        async function selectWallet(walletType) {
+            closeWalletModal();
+            
+            try {
+                let providerToUse = null;
+                
+                console.log(`Attempting to connect to: ${walletType}`);
+                
+                if (walletType === 'brave') {
+                    // Try multiple detection methods for Brave
+                    if (window.ethereum?.isBraveWallet) {
+                        console.log('✅ Found Brave via window.ethereum.isBraveWallet');
+                        providerToUse = window.ethereum;
+                    } else if (window.ethereum?.providers) {
+                        providerToUse = window.ethereum.providers.find(p => p.isBraveWallet);
+                        if (providerToUse) {
+                            console.log('✅ Found Brave via providers array');
+                        }
+                    }
+                    
+                    // Fallback: use window.ethereum if in Brave browser
+                    if (!providerToUse && window.ethereum) {
+                        console.log('⚠️ Using window.ethereum as fallback (might be Brave)');
+                        providerToUse = window.ethereum;
+                    }
+                    
+                } else if (walletType === 'metamask') {
+                    // Find MetaMask specifically (exclude Brave)
+                    if (window.ethereum?.isMetaMask && !window.ethereum?.isBraveWallet) {
+                        console.log('✅ Found MetaMask via window.ethereum');
+                        providerToUse = window.ethereum;
+                    } else if (window.ethereum?.providers) {
+                        providerToUse = window.ethereum.providers.find(p => p.isMetaMask && !p.isBraveWallet);
+                        if (providerToUse) {
+                            console.log('✅ Found MetaMask via providers array');
+                        } else {
+                            // If no non-Brave MetaMask found, just use any MetaMask
+                            providerToUse = window.ethereum.providers.find(p => p.isMetaMask);
+                            console.log('✅ Found MetaMask (might be Brave) via providers array');
+                        }
+                    } else if (window.ethereum) {
+                        console.log('⚠️ Using window.ethereum as fallback for MetaMask');
+                        providerToUse = window.ethereum;
+                    }
+                }
+
+                if (!providerToUse) {
+                    const walletName = walletType === 'brave' ? 'Brave Wallet' : 'MetaMask';
+                    alert(`${walletName} not found! Make sure it's installed and enabled.`);
+                    console.error(`❌ ${walletName} provider not found`);
+                    return;
+                }
+
+                console.log('Selected provider:', providerToUse);
+                await connectWithProvider(providerToUse, walletType);
+                
+            } catch (error) {
+                console.error('Error selecting wallet:', error);
+                alert('Failed to connect: ' + error.message);
+            }
+        }
+
+        // Connect wallet function - now opens modal instead of auto-connecting
+        async function connectWallet() {
+            showWalletModal();
+        }
+
+        // Actual connection logic
+        async function connectWithProvider(ethereum, walletName) {
+            try {
+                if (!ethereum) {
+                    alert('Wallet provider not available!');
+                    return;
+                }
+
+                console.log(`Connecting to ${walletName}...`);
+
+                // Request account access
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                console.log('Accounts received:', accounts);
+
+                // Check if on Sepolia network
+                const chainId = await ethereum.request({ method: 'eth_chainId' });
+                console.log('Current chain ID:', chainId, 'Expected:', SEPOLIA_CHAIN_ID);
+                
+                if (chainId !== SEPOLIA_CHAIN_ID) {
+                    console.log('Wrong network, attempting to switch to Sepolia...');
+                    try {
+                        await ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: SEPOLIA_CHAIN_ID }],
+                        });
+                        console.log('✅ Switched to Sepolia');
+                    } catch (switchError) {
+                        console.error('Switch network error:', switchError);
+                        if (switchError.code === 4902) {
+                            alert('Sepolia network not found in your wallet. Please add it manually:\n\nNetwork Name: Sepolia\nRPC URL: https://sepolia.infura.io/v3/YOUR_KEY\nChain ID: 11155111\nCurrency: ETH');
+                        }
+                        throw switchError;
+                    }
+                }
+
+                // Initialize provider and contract
+                provider = new ethers.providers.Web3Provider(ethereum);
+                contract = new ethers.Contract(REGISTRY_ADDRESS, REGISTRY_ABI, provider);
+                selectedProvider = ethereum;
+
+                const signerAccounts = await provider.listAccounts();
+                console.log('✅ Connected successfully to:', signerAccounts[0]);
+                
+                const walletIcon = walletName === 'brave' ? '🦁' : '🦊';
+                const displayName = walletName.charAt(0).toUpperCase() + walletName.slice(1);
+                document.getElementById('connection-status').innerHTML = 
+                    `${walletIcon} Connected (${displayName}): ${signerAccounts[0].substring(0, 6)}...${signerAccounts[0].substring(38)}`;
+                document.getElementById('connection-status').style.color = '#28a745';
+                document.getElementById('wallet-warning').style.display = 'none';
+                
+                // Show disconnect button, hide connect button
+                document.getElementById('btn-connect').style.display = 'none';
+                document.getElementById('btn-disconnect').style.display = 'inline-block';
+
+            } catch (error) {
+                console.error('❌ Error connecting wallet:', error);
+                document.getElementById('connection-status').innerHTML = '❌ Connection Failed';
+                document.getElementById('connection-status').style.color = '#dc3545';
+                
+                let errorMsg = 'Failed to connect wallet: ';
+                if (error.code === 4001) {
+                    errorMsg += 'You rejected the connection request.';
+                } else if (error.code === -32002) {
+                    errorMsg += 'A connection request is already pending. Please check your wallet.';
+                } else {
+                    errorMsg += error.message;
+                }
+                alert(errorMsg);
+            }
+        }
+
+        // Disconnect wallet function
+        function disconnectWallet() {
+            provider = null;
+            contract = null;
+            selectedProvider = null;
+            
+            document.getElementById('connection-status').innerHTML = 'Not Connected';
+            document.getElementById('connection-status').style.color = '#666';
+            document.getElementById('wallet-warning').style.display = 'block';
+            
+            // Show connect button, hide disconnect button
+            document.getElementById('btn-connect').style.display = 'inline-block';
+            document.getElementById('btn-disconnect').style.display = 'none';
+            
+            // Clear results
+            document.getElementById('addresses-result').innerHTML = '';
+            document.getElementById('data-result').innerHTML = '';
+            
+            console.log('Wallet disconnected');
+        }
+
+        // Get all registered addresses
+        async function getRegisteredAddresses() {
+            const resultDiv = document.getElementById('addresses-result');
+            
+            if (!contract) {
+                resultDiv.innerHTML = '<div class="error">Please connect your wallet first!</div>';
+                return;
+            }
+
+            try {
+                resultDiv.innerHTML = '<div class="loading">⏳ Fetching registered addresses...</div>';
+                
+                const addresses = await contract.getRegisteredAddresses();
+                
+                if (addresses.length === 0) {
+                    resultDiv.innerHTML = '<div class="result-box"><p>No addresses registered yet.</p></div>';
+                    return;
+                }
+
+                let html = '<div class="result-box">';
+                html += `<h3>Found ${addresses.length} Registered Address(es)</h3>`;
+                
+                addresses.forEach((addr, index) => {
+                    html += `
+                        <div class="address-item">
+                            <p><strong>Address ${index + 1}:</strong></p>
+                            <p>${addr}</p>
+                            <button onclick="document.getElementById('address-input').value='${addr}'; getDataForAddress();" 
+                                    style="margin-top: 10px; padding: 8px 15px; font-size: 14px;">
+                                View Data
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error fetching addresses:', error);
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Get data for a specific address
+        async function getDataForAddress() {
+            const resultDiv = document.getElementById('data-result');
+            const addressInput = document.getElementById('address-input').value.trim();
+
+            if (!contract) {
+                resultDiv.innerHTML = '<div class="error">Please connect your wallet first!</div>';
+                return;
+            }
+
+            if (!addressInput || addressInput === '0x') {
+                resultDiv.innerHTML = '<div class="error">Please enter a valid address!</div>';
+                return;
+            }
+
+            if (!ethers.utils.isAddress(addressInput)) {
+                resultDiv.innerHTML = '<div class="error">Invalid Ethereum address format!</div>';
+                return;
+            }
+
+            try {
+                resultDiv.innerHTML = '<div class="loading">⏳ Fetching data...</div>';
+                
+                const data = await contract.getData(addressInput);
+                
+                // Check if data exists (all fields are zero/empty by default)
+                const hasData = data.tx_challenge01 !== '0x0000000000000000000000000000000000000000000000000000000000000000';
+                
+                if (!hasData) {
+                    resultDiv.innerHTML = '<div class="result-box"><p>No data found for this address.</p></div>';
+                    return;
+                }
+
+                let html = '<div class="result-box"><h3>📊 Data for Address</h3>';
+                html += '<div class="data-card">';
+                
+                html += `
+                    <div class="data-field">
+                        <label>Queried Address:</label>
+                        <div class="value">${addressInput}</div>
+                    </div>
+                    <div class="data-field">
+                        <label>TX Challenge 01:</label>
+                        <div class="value">${data.tx_challenge01}</div>
+                    </div>
+                    <div class="data-field">
+                        <label>TX Challenge 02:</label>
+                        <div class="value">${data.tx_challenge02}</div>
+                    </div>
+                    <div class="data-field">
+                        <label>Contract Challenge 03:</label>
+                        <div class="value">${data.contract_challenge03}</div>
+                    </div>
+                    <div class="data-field">
+                        <label>Contract Challenge 04:</label>
+                        <div class="value">${data.contract_challenge04}</div>
+                    </div>
+                `;
+                
+                html += '</div></div>';
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // REMOVED AUTO-CONNECT - User must manually click "Connect Wallet"
+        window.addEventListener('load', async () => {
+            // Just show the warning, don't auto-connect
+            document.getElementById('wallet-warning').style.display = 'block';
+        });
+
+        // Listen for account changes - but don't auto-connect
+        if (typeof window.ethereum !== 'undefined') {
+            window.ethereum.on('accountsChanged', (accounts) => {
+                if (accounts.length === 0) {
+                    disconnectWallet();
+                } else if (provider) {
+                    // Only reload if already connected
+                    window.location.reload();
+                }
+            });
+
+            window.ethereum.on('chainChanged', () => {
+                if (provider) {
+                    // Only reload if already connected
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
