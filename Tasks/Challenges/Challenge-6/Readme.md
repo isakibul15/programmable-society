@@ -61,11 +61,6 @@ requests>=2.28.0
 
 ### Step 1: Clone the Repository
 
-```bash
-git clone https://github.com/YOUR_USERNAME/challenge-06-transaction-analysis.git
-cd challenge-06-transaction-analysis
-```
-
 ### Step 2: Install Python Dependencies
 
 ```bash
@@ -381,19 +376,7 @@ logging.basicConfig(level=logging.DEBUG)
 challenge-06-transaction-analysis/
 │
 ├── challenge06_analyzer.py    # Main analysis script
-├── README.md                   # This file
-├── requirements.txt            # Python dependencies
-├── LICENSE                     # MIT License
-│
-├── examples/                   # Example transactions
-│   └── example_tx.txt
-│
-├── docs/                       # Additional documentation
-│   ├── TECHNICAL.md           # Technical deep-dive
-│   └── CONTRIBUTING.md        # Contribution guidelines
-│
-└── tests/                      # Test cases
-    └── test_analyzer.py
+└── README.md                   # This file
 ```
 
 ## 🧪 Testing
@@ -408,38 +391,6 @@ python3 challenge06_analyzer.py 0x377b0553f35138bfa36f1899f4d6088403c45823b86e9e
 
 Expected result: ✅ ALL CHECKS PASSED!
 
-### Run Unit Tests (Optional)
-
-```bash
-python3 -m pytest tests/
-```
-
-## 🤝 Contributing
-
-Contributions are welcome! Here's how you can help:
-
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/AmazingFeature`)
-3. **Commit your changes** (`git commit -m 'Add some AmazingFeature'`)
-4. **Push to the branch** (`git push origin feature/AmazingFeature`)
-5. **Open a Pull Request**
-
-### Development Setup
-
-```bash
-# Clone your fork
-git clone https://github.com/YOUR_USERNAME/challenge-06-transaction-analysis.git
-
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Install dev dependencies
-pip install pytest black flake8
-```
 
 ## 📄 License
 
@@ -457,7 +408,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - **Course:** DD2585 - Programmable Society at KTH
-- **Professor:** [Professor Name]
+- **Professor:** Martin
 - **RPC Provider:** [Ankr](https://www.ankr.com/) for free Sepolia access
 - **Libraries:** Web3.py team for excellent Ethereum tooling
 
@@ -469,20 +420,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Etherscan Sepolia](https://sepolia.etherscan.io/)
 - [Solidity Documentation](https://docs.soliditylang.org/)
 
-## 🔗 Related Challenges
-
-- [Challenge 1-3](../challenges-1-3/) - Smart Contract Development
-- [Challenge 4](../challenge-04/) - Contract Deployment
-- [Challenge 5](../challenge-05/) - Frontend Development
 
 ---
 
 ⭐ **Star this repository** if you found it helpful!
 
-📮 **Questions?** Open an issue or contact me directly.
-
-🐛 **Found a bug?** Please report it in the Issues section.
-
 ---
 
-*Last Updated: December 2024*
+*Last Updated: December 2025*
