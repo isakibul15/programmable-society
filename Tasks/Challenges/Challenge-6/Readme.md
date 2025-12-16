@@ -375,7 +375,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Md. Sakibul Islam**
 
-- GitHub: [@sakibulislam](https://github.com/sakibulislam)
+- GitHub: [@isakibul15](https://github.com/isakibul15)
 - Course: DD2585 - Programmable Society
 - Institution: KTH Royal Institute of Technology
 - Semester: Fall 2024

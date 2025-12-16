@@ -545,7 +545,7 @@ copies or substantial portions of the Software.
 
 **Md. Sakibul Islam**
 
-- **GitHub:** [@sakibulislam](https://github.com/isakibul15)
+- **GitHub:** [@isakibul15](https://github.com/isakibul15)
 - **Wallet:** `0x78a99507C200dC674830861b60DB79CF0f96c663`
 - **Contract:** `0xYOUR_CONTRACT_ADDRESS` (Sepolia)
 - **Course:** DD2585 - Programmable Society

@@ -686,7 +686,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Md. Sakibul Islam**
 
-- **GitHub:** [@sakibulislam](https://github.com/isakibul15)
+- **GitHub:** [@isakibul15](https://github.com/isakibul15)
 - **Wallet:** `0x78a99507C200dC674830861b60DB79CF0f96c663`
 - **Contract:** `0xFdB65a15B3589388BA729Ce4B2Aa98BEf79154F4`
 - **Register TX:** `0x377b0553f35138bfa36f1899f4d6088403c45823b86e9e434cfddd5a94a055bc`
