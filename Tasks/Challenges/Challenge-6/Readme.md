@@ -93,14 +93,6 @@ The script includes a working Ankr API key. No configuration needed!
 ANKR_RPC = "https://rpc.ankr.com/eth_sepolia/YOUR_API_KEY_HERE"
 ```
 
-### Alternative RPC Providers
-
-You can also use other providers:
-
-- **Alchemy:** `https://eth-sepolia.g.alchemy.com/v2/YOUR_KEY`
-- **Infura:** `https://sepolia.infura.io/v3/YOUR_KEY`
-- **QuickNode:** Get endpoint from [QuickNode](https://www.quicknode.com/)
-
 ## 📖 Usage
 
 ### Basic Usage
