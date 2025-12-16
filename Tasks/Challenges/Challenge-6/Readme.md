@@ -7,23 +7,6 @@
 
 A Python-based transaction analyzer that verifies internal calls to smart contracts on Ethereum's Sepolia testnet. Built for **DD2585 - Programmable Society** course at KTH.
 
-## 📋 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [How It Works](#how-it-works)
-- [Example Output](#example-output)
-- [Technical Details](#technical-details)
-- [Troubleshooting](#troubleshooting)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-- [Author](#author)
-
 ## 🎯 Overview
 
 This program analyzes Ethereum transactions to verify:
